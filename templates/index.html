@@ -16,3 +16,12 @@
         <input type="submit" value="submit"/>
 
     <form>
+
+    <div class="container">
+      {% for user in users %}
+          <h2>{{user["name"]}}</h2>
+          <h2>{{user["title"]}}</h2>
+          <h2>{{user["content"]}}</h2>
+
+    </div>            
+      {% endfor %}

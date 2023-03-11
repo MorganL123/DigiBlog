@@ -8,16 +8,16 @@ app = Flask(__name__)
 def index():
     
     return render_template('index.html')
+    
 
 @app.route('/success', methods = ["POST"])
 def submit():
     name = request.form['name']
     title = request.form['title']
     content = request.form['content']
-
     add_user_info(name, title, content)
     users = get_all_users()
-    return render_template('post.html', users = users)    
+    return render_template('index.html', users = users)
 
 def add_user_info(name, title, content):
     conn = sqlite3.connect('./static/data/digiblog.db')
@@ -26,16 +26,20 @@ def add_user_info(name, title, content):
     conn.commit()
     conn.close()
 
+
+
 def get_all_users():
     conn = sqlite3.connect('./static/data/digiblog.db')
     curs = conn.cursor()
     result = curs.execute("SELECT * FROM users")
     users = []
+
     for row in result:
         user = {
-            'name': row[0],
-            'title': row[1],
-            'content': row[2],
+            'rowid': row[0],
+            'name': row[1],
+            'title': row[2],
+            'content': row[3],
         }
         print(user)
         users.append(user)
