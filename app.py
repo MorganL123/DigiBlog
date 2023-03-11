@@ -6,9 +6,8 @@ app = Flask(__name__)
 @app.route('/')
 
 def index():
-    users = get_all_users()
     
-    return render_template('index.html', engineers = engineers)
+    return render_template('index.html')
 
 @app.route('/success', methods = ["POST"])
 def submit():
@@ -16,28 +15,27 @@ def submit():
     title = request.form['title']
     content = request.form['content']
 
-    add_post(name, title, content)
+    add_user_info(name, title, content)
+    users = get_all_users()
+    return render_template('post.html', users = users)    
 
-    return render_template('post.html')    
-
-def add_user(name, age, height, group):
-    conn = sqlite3.connect('./static/data/DigiBlog.db')
+def add_user_info(name, title, content):
+    conn = sqlite3.connect('./static/data/digiblog.db')
     curs = conn.cursor()
     curs.execute("INSERT INTO users(name, title, content) VALUES (?, ?, ?)", (name, title, content))
     conn.commit()
     conn.close()
 
 def get_all_users():
-    conn = sqlite3.connect('./static/data/DigiBlog.db')
+    conn = sqlite3.connect('./static/data/digiblog.db')
     curs = conn.cursor()
     result = curs.execute("SELECT * FROM users")
     users = []
     for row in result:
         user = {
             'name': row[0],
-            'age': row[1],
-            'height': row[2],
-            'group': row[3]
+            'title': row[1],
+            'content': row[2],
         }
         print(user)
         users.append(user)
@@ -46,4 +44,4 @@ def get_all_users():
 
 
 if __name__== '__main__':
-    app.run(debug=True, host ='0.0.0.0', port = 8000)
+    app.run(debug=True, host ='0.0.0.0', port = 3000)
