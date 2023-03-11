@@ -9,7 +9,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Cabin&display=swap" rel="stylesheet">
 </head>
   <body>
-      <h1>You were successful!</h1>
+    <h1>Edit post</h1>
+    <form action="{{ '/edit-user/%s' %user.rowid }}" method="post">  
+        <input type="text" name="name" value="{{user['name']}}">
+        <input type="text" name="title" value="{{user['title']}}">
+        <input type="text" name="content" value="{{user['content']}}">
+        <input type="Submit" value="Submit">
+    </form>
         
 
 

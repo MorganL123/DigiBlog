@@ -19,9 +19,14 @@
 
     <div class="container">
       {% for user in users %}
+        <div class="post">
           <h2>{{user["name"]}}</h2>
           <h2>{{user["title"]}}</h2>
           <h2>{{user["content"]}}</h2>
-
-    </div>            
-      {% endfor %}
+          <a href="{{ '/edit/%s' %user.rowid }}">Edit</a> |
+          <a href="{{ '/delete-user/%s' %user.rowid }}">Delete</a>
+        </div>            
+        {% endfor %}
+    </div> 
+      
+  
