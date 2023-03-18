@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
 
 app = Flask(__name__)
+api_key = 'YJxoFllQ7hdMfUxP4mAiUgnmCZzmD2UkZQEparTjexuALnxn0IP9Gy5F'
 
 @app.route('/')
 
@@ -9,10 +10,19 @@ def index():
     users = get_all_users()
     return render_template('index.html', users = users)
 
+@app.route('/image', methods=['POST'])
+def image_fn():
+    image = request.form['image']
+    headers = {"Authorization": api_key}
+    response = requests.get(f'https://api.pexels.com/v1/search?query={image}.json', headers = headers) 
+    data = response.json()  
+    return render_template('image.html',data=data)  
+
 @app.route('/edit/<rowid>')
 def edit(rowid):
     users = get_user(rowid)
     return render_template('edit.html', user = users)
+
 
 @app.route('/edit-user/<rowid>', methods=['POST'])
 def edit_user(rowid):
