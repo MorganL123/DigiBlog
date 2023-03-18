@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-import sqlite3
+import sqlite3, requests
 
 app = Flask(__name__)
 api_key = 'YJxoFllQ7hdMfUxP4mAiUgnmCZzmD2UkZQEparTjexuALnxn0IP9Gy5F'
@@ -14,9 +14,14 @@ def index():
 def image_fn():
     image = request.form['image']
     headers = {"Authorization": api_key}
-    response = requests.get(f'https://api.pexels.com/v1/search?query={image}.json', headers = headers) 
-    data = response.json()  
-    return render_template('image.html',data=data)  
+    response = requests.get(f'https://api.pexels.com/v1/search?query={image}&per_page=10', headers = headers) 
+    data = response.json()      
+
+    print(data)
+    for photos in data:
+        print(photos["url"])
+    return render_template('image.html',photos=data)
+  
 
 @app.route('/edit/<rowid>')
 def edit(rowid):
@@ -45,7 +50,9 @@ def submit():
     content = request.form['content']
     add_user(name, title, content)
     users = get_all_users()
+    return image_fn()
     return render_template('index.html', users = users)
+
 
 def add_user(name, title, content):
     conn = sqlite3.connect('./static/data/digiblog.db')
