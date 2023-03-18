@@ -15,11 +15,13 @@
     {% for photo in photos %}
         <div class="image">
         <img src="{{photo}}">
-        </div>
+        <div class="container">
     {% endfor %}
-    </div>
-</body>
-</html>
-
+    </div>   
+            
+    <div class="chosen_pictures">
+    {% for user in users %}
+        <a href="{{ '/choose_image/%s' %user.rowid }}">Choose</a> |
+    </div> 
 </body>
 </html>

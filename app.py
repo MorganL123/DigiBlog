@@ -17,10 +17,16 @@ def image_fn():
     response = requests.get(f'https://api.pexels.com/v1/search?query={image}&per_page=10', headers = headers) 
     data = response.json()      
 
-    print(data)
-    for photos in data:
-        print(photos["url"])
-    return render_template('image.html',photos=data)
+    photoList = data["photos"]
+
+    print("\n\n Loop of Photo URLs \n\n")
+    photos = []
+
+    for photo in photoList:
+        picture = photo["src"]["portrait"]
+        photos.append(picture)
+    # ["picture"]
+    return render_template('image.html',photos=photos)
   
 
 @app.route('/edit/<rowid>')
@@ -42,6 +48,12 @@ def edit_user(rowid):
 def delete(rowid):
     delete_user(rowid)
     return redirect(url_for('index'))
+
+@app.route('/add-image/<rowid>')
+def add_image(rowid):
+    add_image(rowid)
+    return redirect(url_for('index'))
+
 
 @app.route('/success', methods = ["POST"])
 def submit():
@@ -75,7 +87,14 @@ def delete_user(rowid):
     conn.commit()
     conn.close()
 
-def get_user(rowid):
+def delete_user(rowid):
+    conn = sqlite3.connect('./static/data/digiblog.db')
+    curs = conn.cursor()
+    curs.execute("DELETE FROM users WHERE rowid = ?", (rowid,))
+    conn.commit()
+    conn.close()
+
+def choose_image(rowid):
     conn = sqlite3.connect('./static/data/digiblog.db')
     curs = conn.cursor()
     result = curs.execute("SELECT rowid, * FROM users WHERE rowid = ?", (rowid,))
